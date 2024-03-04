@@ -1,0 +1,10 @@
+{
+  "manifest_version": 3,
+  "name": "Remotify",
+  "description": "Test",
+  "version": "1.0",
+  "action": {
+    "default_popup": "/popup/remotify.html",
+    "default_icon": "/images/remotifylogo.png"
+  }
+}
