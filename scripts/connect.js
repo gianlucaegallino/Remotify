@@ -1,32 +1,36 @@
 window.onSpotifyWebPlaybackSDKReady = () => {
-    const token =
-      "[BQAboeLC-TKs0RSa9aqshecN0Pc4iwBubYwi3G1Dt3wczND2SvyTYz4m2EPLzVyGWbAAO0haWsJaYuNvGbrdc8LhJm3RCoQh6WG1KuWvfJtgFq0KSzIW6AFGQBHlc5RqZCeHbDHHeqBmCetY4flv8uqbDx8ta1oC7pu3d8bCckOIc3lHeGHXD82OymeBb_Ghy8IigwxiswM]";
-    const player = new Spotify.Player({
-      name: "Web Playback SDK Quick Start Player",
-      getOAuthToken: (cb) => {
-        cb(token);
-      },
-      volume: 0.5,
-    });
-    // Ready
-    player.addListener("ready", ({ device_id }) => {
-      console.log("Ready with Device ID", device_id);
-    });
+  const token = 'BQCBhgONYE4b9loWhJ6rDJbmJzG6jF6ZtCuZfnlcfIgm26c6ku8vi7LcqsfpTqzwfpnEyTMOlk1E9VQTdiSuWIjFhjpzhopiroq2Gfswsj3szq5vdWuupHsDQ3S31atXB-krmARKiGJQnzYe3xsz7H8VqOSgQXcMPse9uDemD6ncc-ZQGzDhZViyzT0WQ2O1qff_v0KCRrU  ';
+  const player = new Spotify.Player({
+      name: 'Web Playback SDK Quick Start Player',
+      getOAuthToken: cb => { cb(token); },
+      volume: 0.5
+  });
 
-    // Not Ready
-    player.addListener("not_ready", ({ device_id }) => {
-      console.log("Device ID has gone offline", device_id);
-    });
-    player.addListener("initialization_error", ({ message }) => {
-      console.error(message);
-    });
+  // Ready
+  player.addListener('ready', ({ device_id }) => {
+      console.log('Ready with Device ID', device_id);
+  });
 
-    player.addListener("authentication_error", ({ message }) => {
-      console.error(message);
-    });
+  // Not Ready
+  player.addListener('not_ready', ({ device_id }) => {
+      console.log('Device ID has gone offline', device_id);
+  });
 
-    player.addListener("account_error", ({ message }) => {
+  player.addListener('initialization_error', ({ message }) => {
       console.error(message);
-    });
-    player.connect();
+  });
+
+  player.addListener('authentication_error', ({ message }) => {
+      console.error(message);
+  });
+
+  player.addListener('account_error', ({ message }) => {
+      console.error(message);
+  });
+
+  document.getElementById('togglePlay').onclick = function() {
+    player.togglePlay();
   };
+
+  player.connect();
+}
