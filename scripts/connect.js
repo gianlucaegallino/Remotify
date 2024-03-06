@@ -2,7 +2,7 @@
 
 window.onSpotifyWebPlaybackSDKReady = () => {
   const token =
-    "BQA5jt4Sr1hoh_lsPp4klpHgrYKNjE--HHQjFwWKtJn0ZSt2xxhvGrDOvrq9JH9ElQosWXHZN1GfvbydcMem_m8ejoI-VmYdom91IOvbvnfCybX0cnofdzsSBVTJhSZB7tNYPBi06CxdUdA6xrrdV4ZbVJGLiiQ6wQYmyiOF4G_WdWIzdHYPDMa258dVXdQ3-wFe_PmVz0g";
+    "BQAGl8Ie_edAWcpp1St42Eg1ocxifCdTJC54WPkRximoLur1gxOQpuXsXL-8022zEBzygNIRD-XI_eMGn3iGqo-XREjcfl_FYFv8pxG1fNcYD9ciMQGXv0Vupw2mJ2OWM_lw-j2V6GqzSpCdwpVVRIz8ch67G7gsafAhdhIY0wb0TBQ8zzBhATVTxnXV4N6rtZ_hpAIXSbA";
   const player = new Spotify.Player({
     name: "Remotify Player",
     getOAuthToken: (cb) => {
