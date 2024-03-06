@@ -1,8 +1,10 @@
+//Test current token for validity. Else, generates a new token. 
+
 //Creates a new spotify sdk player object
 
 window.onSpotifyWebPlaybackSDKReady = () => {
-  const token =
-    "BQAGl8Ie_edAWcpp1St42Eg1ocxifCdTJC54WPkRximoLur1gxOQpuXsXL-8022zEBzygNIRD-XI_eMGn3iGqo-XREjcfl_FYFv8pxG1fNcYD9ciMQGXv0Vupw2mJ2OWM_lw-j2V6GqzSpCdwpVVRIz8ch67G7gsafAhdhIY0wb0TBQ8zzBhATVTxnXV4N6rtZ_hpAIXSbA";
+  //const token = localstorage.getItem("");
+  const token = 'BQDNoyVOUdLN1sw_S8Pa_irNLxQaAb7OCDdP8o-J4XWEyL2C8jAyxPDxwuvoLNdmEs9g6JsQmymy9hHGog2kWNIpMy9FeoIBIrh4nfC_PL8QVP0Wr0r0ZxDsD4yoTqKa22gQ1XUgx3mkJFYCUzd8Wjnp288uJBpeBhhXgL2Mnw_A25VcNt9P5QHaRjl1tKi6BMx3Wazex1I';
   const player = new Spotify.Player({
     name: "Remotify Player",
     getOAuthToken: (cb) => {
@@ -65,11 +67,16 @@ window.onSpotifyWebPlaybackSDKReady = () => {
         }
         return artists.join(", ");
       })()}`
-      document.getElementById("currentlyPlaying").innerHTML = returnedplaying
-      document.getElementById("artists").innerHTML = returnedartists
+      let returnedcover = current_track.album.images[0].url;
+      document.getElementById("currentlyPlaying").innerHTML = returnedplaying;
+      document.getElementById("artists").innerHTML = returnedartists;
+      document.getElementById("albumCover").src = returnedcover;
+      console.log(current_track);
     }
   );
 
   // connects the player
   player.connect();
+
+  //makes an api call for the album image, not provided by the sdk. 
 };

@@ -85,6 +85,7 @@ if (code == "error" || code == "state") {
     const body = await fetch(url, payload);
     const response = await body.json();
 
+    //sets access and refresh tokens in localstorage for easy access.
     localStorage.setItem("access_token", response.access_token);
     localStorage.setItem("refresh_token", response.refresh_token);
   };
