@@ -59,8 +59,8 @@ window.onSpotifyWebPlaybackSDKReady = () => {
   player.addListener(
     "player_state_changed",
     ({ track_window: { current_track } }) => {
-      let returnedplaying = `Currently Playing: ${current_track.name}`
-      let returnedartists = `Artists: ${(() => {
+      let returnedplaying = `${current_track.name}`
+      let returnedartists = `${(() => {
         artists = []
         for (const artist of current_track.artists) {
           artists.push(artist.name)
