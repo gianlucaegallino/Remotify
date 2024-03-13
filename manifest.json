@@ -11,11 +11,16 @@
       "48": "/images/48.png",
       "128": "/images/128.png"
     },
-    "default_title": "Remotify" 
+    "default_title": "Remotify"
   },
-
-  
-  "permissions": ["storage"],
+  "permissions": ["storage", "webNavigation", "activeTab", "tabs", "identity"],
+  "host_permissions": ["*://*/*"],
+  "web_accessible_resources": [
+    {
+      "resources": [ "/scripts/*", "/popup/*" ],
+      "matches": ["*://*/*"]
+    }
+  ],
   "icons": {
     "16": "/images/16.png",
     "32": "/images/32.png",
