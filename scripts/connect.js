@@ -1,16 +1,9 @@
-/**
- * This is an example of a basic node.js script that performs
- * the Authorization Code with PKCE oAuth2 flow to authenticate
- * against the Spotify Accounts.
- *
- * For more information, read
- * https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow
- */
+//This code is heavily modeled after the code in https://github.com/spotify/web-api-examples/tree/master/authorization/authorization_code_pkce
 
+// Constants for Spotify API authentication
 const clientId = "60f8dab9ab5f46ab993a5378bea82f26"; // your clientId
 const redirectUrl =
   "chrome-extension://hndbihmidcdkhcpbjodeagbolmbbmolj/popup/remotify.html"; // your redirect URL - must be localhost URL and/or HTTPS
-
 const authorizationEndpoint = "https://accounts.spotify.com/authorize";
 const tokenEndpoint = "https://accounts.spotify.com/api/token";
 const scope = "user-read-private user-read-email";
@@ -30,6 +23,7 @@ const currentToken = {
     return localStorage.getItem("expires") || null;
   },
 
+  // Saves the token to localStorage along with expiration details
   save: function (response) {
     const { access_token, refresh_token, expires_in } = response;
     localStorage.setItem("access_token", access_token);
@@ -43,6 +37,7 @@ const currentToken = {
 };
 
 // On page load, try to fetch auth code from current browser search URL
+//TODO: FIX
 const args = new URLSearchParams(window.location.search);
 let code = args.get("code");
 
@@ -53,12 +48,14 @@ if (code) {
       currentToken.save(token);
 
       // Remove code from URL so we can refresh correctly.
+      //TODO: FIX
       const url = new URL(window.location.href);
       url.searchParams.delete("code");
 
       const updatedUrl = url.search ? url.href : url.href.replace("?", "");
       window.history.replaceState({}, document.title, updatedUrl);
-      window.location.reload();
+      //Reloads window to update stuck templates
+      window.close();
     })
     .catch((error) => console.error("Error getting token:", error));
 }
@@ -78,7 +75,9 @@ if (!currentToken.access_token) {
   renderTemplate("main", "login");
 }
 
+// Function to initiate Spotify authorization flow
 async function redirectToSpotifyAuthorize() {
+  // Generate a random code_verifier for PKCE
   const possible =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   const randomValues = crypto.getRandomValues(new Uint8Array(64));
@@ -87,35 +86,37 @@ async function redirectToSpotifyAuthorize() {
     ""
   );
 
+  // Create code_challenge and store code_verifier in localStorage
   const code_verifier = randomString;
   const data = new TextEncoder().encode(code_verifier);
   const hashed = await crypto.subtle.digest("SHA-256", data);
-
   const code_challenge_base64 = btoa(
     String.fromCharCode(...new Uint8Array(hashed))
   )
     .replace(/=/g, "")
     .replace(/\+/g, "-")
     .replace(/\//g, "_");
-
   window.localStorage.setItem("code_verifier", code_verifier);
 
+  // Build authorization URL with PKCE parameters
   const authUrl = new URL(authorizationEndpoint);
   const params = {
     response_type: "code",
     client_id: clientId,
     scope: scope,
-    //TODO: add state
     code_challenge_method: "S256",
     code_challenge: code_challenge_base64,
     redirect_uri: redirectUrl,
   };
 
   authUrl.search = new URLSearchParams(params).toString();
-  window.location.href = authUrl.toString(); // Redirect the user to the authorization server for login
+  // Redirect the user to the authorization server for login
+  chrome.tabs.create({
+    url: authUrl.toString(),
+  });
 }
 
-// Spotify API Calls
+// Function to exchange authorization code for access token
 async function getToken(code) {
   const code_verifier = localStorage.getItem("code_verifier");
 
@@ -136,6 +137,7 @@ async function getToken(code) {
   return await response.json();
 }
 
+// Function to refresh access token
 async function refreshToken() {
   const response = await fetch(tokenEndpoint, {
     method: "POST",
@@ -152,6 +154,7 @@ async function refreshToken() {
   return await response.json();
 }
 
+// Function to fetch user data from Spotify API
 async function getUserData() {
   const response = await fetch("https://api.spotify.com/v1/me", {
     method: "GET",
@@ -161,18 +164,21 @@ async function getUserData() {
   return await response.json();
 }
 
-// Click handlers
+// Click event handlers
+
+// Initiates Spotify authorization flow
 async function loginWithSpotifyClick() {
   await redirectToSpotifyAuthorize();
-  
 }
 
+// Logs out the user by clearing localStorage and redirecting to the redirect URL
 async function logoutClick() {
   console.log("deleting stuff");
   localStorage.clear();
   window.location.href = redirectUrl;
 }
 
+// Refreshes access token and updates UI
 async function refreshTokenClick() {
   console.log("refreshing token");
   const token = await refreshToken();
@@ -180,11 +186,12 @@ async function refreshTokenClick() {
   renderTemplate("oauth", "oauth-template", currentToken);
 }
 
-// HTML Template Rendering 
+// Render HTML templates
 function renderTemplate(targetId, templateId, data = null) {
   const template = document.getElementById(templateId);
   const clone = template.content.cloneNode(true);
 
+  // Bind data to template elements
   const elements = clone.querySelectorAll("*");
   elements.forEach((ele) => {
     const bindingAttrs = [...ele.attributes].filter((a) =>
@@ -201,7 +208,7 @@ function renderTemplate(targetId, templateId, data = null) {
       const prefix = targetType === "PROPERTY" ? "data." : "";
       const expression = prefix + attr.value.replace(/;\n\r\n/g, "");
 
-      // Maybe use a framework with more validation here ;)
+      // Bind data /.event handlers to template elements
       try {
         if (targetType === "PROPERTY") {
           ele[targetProp] = data ? data[attr.value] : "";
@@ -221,44 +228,28 @@ function renderTemplate(targetId, templateId, data = null) {
     });
   });
 
+  // Render the template in the target element
   const target = document.getElementById(targetId);
   target.innerHTML = "";
   target.appendChild(clone);
 
+  // Add event listeners to the newly rendered elements
   addPageListeners();
 }
 
-document.getElementById("printAuth").addEventListener("click", function () {
-  // Retrieve the access token from local storage
-  const accessToken = localStorage.getItem("access_token");
-  console.log(accessToken);
-});
-
+// Add listeners to the page p
 function addPageListeners() {
   const loginButton = document.getElementById("login-button");
   if (loginButton) {
     loginButton.addEventListener("click", loginWithSpotifyClick);
-    console.log("binded to 1");
   }
-  else{
-    console.log("no login here");
-  }
-
   const refreshButton = document.getElementById("refresh-token-button");
   if (refreshButton) {
     refreshButton.addEventListener("click", refreshTokenClick);
-    console.log("binded to 2");
   }
-  else{
-    console.log("no refresh here");
-  }
-
   const logoutButton = document.getElementById("logout-button");
   if (logoutButton) {
     logoutButton.addEventListener("click", logoutClick);
     console.log("binded to 3");
   }
-  else{
-    console.log("no logout here");
-  }
-};
+}

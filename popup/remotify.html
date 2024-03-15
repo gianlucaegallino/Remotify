@@ -105,28 +105,11 @@
           id="volumeslider"
         />
       </div>
+      <div>
+        <button id="refresh-token-button">Refresh Token</button>
+        <button id="logout-button">Log out</button>
+      </div>
     </template>
-    <template id="oauth-template">
-      <h2>oAuth info</h2>
-      <table>
-        <tr>
-          <td>Access token</td>
-          <td data-bind="access_token"></td>
-        </tr>
-        <tr>
-          <td>Refresh token</td>
-          <td data-bind="refresh_token"></td>
-        </tr>
-        <tr>
-          <td>Expiration at</td>
-          <td data-bind="expires">${getExpirationDate(expires_in)}</td>
-        </tr>
-      </table>
-      <button id="refresh-token-button">Refresh Token</button>
-      <button id="logout-button">Log out</button>
-    </template>
-    <button id="printAuth">printauth</button>
-
     <script src="../scripts/connect.js" type="module" defer></script>
   </body>
 </html>

@@ -13,7 +13,7 @@
     },
     "default_title": "Remotify"
   },
-  "permissions": ["storage", "webNavigation", "activeTab", "tabs", "identity"],
+  "permissions": ["storage", "webNavigation", "activeTab", "tabs", "identity", "history"],
   "host_permissions": ["*://*/*"],
   "web_accessible_resources": [
     {
