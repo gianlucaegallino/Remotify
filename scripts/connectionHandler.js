@@ -1,3 +1,4 @@
+//This scripts takes care of the login/logout functions + template rendering.
 //This code is heavily modeled after the code in https://github.com/spotify/web-api-examples/tree/master/authorization/authorization_code_pkce
 
 // Constants for Spotify API authentication
