@@ -1,6 +1,5 @@
 //This scripts takes care of the login/logout functions + template rendering.
 //This code is heavily modeled after the code in https://github.com/spotify/web-api-examples/tree/master/authorization/authorization_code_pkce
-console.log("connection file loaded.");
 // Constants for Spotify API authentication
 const clientId = "60f8dab9ab5f46ab993a5378bea82f26"; // your clientId
 const redirectUrl =
@@ -12,7 +11,6 @@ const scope =
 
 window.onSpotifyWebPlaybackSDKReady = () => {
   if (localStorage.getItem("access_token") != null) {
-    console.log("sdk triggered.");
     const token = localStorage.getItem("access_token");
     const player = new Spotify.Player({
       name: "Remotify Player",
@@ -21,9 +19,6 @@ window.onSpotifyWebPlaybackSDKReady = () => {
       },
       volume: 0.5,
     });
-    if (player) {
-      console.log("player created.");
-    }
 
     //Status logging
     // Ready
@@ -50,8 +45,11 @@ window.onSpotifyWebPlaybackSDKReady = () => {
       console.error(message);
     });
 
+    // variables for keeping track of updates in listeners/elements
+
     let progressUpdating = false;
     let listenersOn = false;
+
     // Connection state listeners
 
     player.addListener(
@@ -69,11 +67,21 @@ window.onSpotifyWebPlaybackSDKReady = () => {
         document.getElementById("currentlyPlaying").innerHTML = returnedplaying;
         document.getElementById("artists").innerHTML = returnedartists;
         document.getElementById("albumCover").src = returnedcover;
+
+        //checks if the tutorial screen is still present. if it is, switches visibility from the tutorial to the player
+        let playerElement = document.getElementById("player")
+        let tutorialElement = document.getElementById("tutorial")
+        if (tutorialElement.classList.contains('visible')){
+          tutorialElement.classList.toggle('visible');
+          playerElement.classList.toggle('visible');
+        }
         //sets the corresponding length in the progress slider.
+
         document.getElementById("progressslider").max =
           current_track.duration_ms;
 
         //checks if the buttons already have listeners, else applies listeners to them.
+
         if (listenersOn == false) {
           const togglePlay = document.getElementById("togglePlay");
           if (togglePlay) {
@@ -81,8 +89,6 @@ window.onSpotifyWebPlaybackSDKReady = () => {
               player.togglePlay();
             };
             listenersOn = true;
-          } else {
-            console.log("err1");
           }
           const previousTrack = document.getElementById("previousTrack");
           if (previousTrack) {
@@ -90,8 +96,6 @@ window.onSpotifyWebPlaybackSDKReady = () => {
               player.previousTrack();
             };
             listenersOn = true;
-          } else {
-            console.log("err2");
           }
           const nextTrack = document.getElementById("nextTrack");
           if (nextTrack) {
@@ -99,10 +103,9 @@ window.onSpotifyWebPlaybackSDKReady = () => {
               player.nextTrack();
             };
             listenersOn = true;
-          } else {
-            console.log("err3");
           }
           //slider listeners
+
           let volume = document.getElementById("volumeslider");
           let progress = document.getElementById("progressslider");
           volume.oninput = function () {
@@ -111,7 +114,9 @@ window.onSpotifyWebPlaybackSDKReady = () => {
           progress.oninput = function () {
             player.seek(progress.value);
           };
+
           //starts updating the bar progress.
+
           if (progressUpdating == false) {
             progressUpdating = true;
             setInterval(function () {
@@ -130,6 +135,7 @@ window.onSpotifyWebPlaybackSDKReady = () => {
     );
 
     // connects the player
+
     player.connect();
     console.log("connected");
   }

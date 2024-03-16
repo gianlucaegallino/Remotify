@@ -1,3 +1,4 @@
+
 body {
   padding: 1rem;
 }
@@ -5,4 +6,20 @@ body {
 button svg {
   width: 1rem;
   height: 1rem;
+}
+
+#player {
+  display:none;
+}
+
+#player.visible{
+  display:block;
+}
+
+#tutorial {
+  display:none;
+}
+
+#tutorial.visible{
+  display:block;
 }
