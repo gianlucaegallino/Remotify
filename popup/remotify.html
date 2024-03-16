@@ -19,98 +19,104 @@
     <div id="main"></div>
     <div id="oauth"></div>
     <template id="login">
-      <h2>Connect to "Remotify" via Spotify Connect to start playing!</h2>
-      <h3>How to:</h3>
-      <ol>
-        <li>Open Spotify on your phone or on the desktop app.</li>
-        <li>Press on the "Devices" icon.</li>
-        <li>Select the "Remotify" option.</li>
-        <li>Enjoy your music!</li>
-      </ol>
+      <h2>Welcome to Remotify!</h2>
+      <h3>Please log in with your spotify account:</h3>
       <button id="login-button">Log in with Spotify</button>
       <!--Add a gif here, maybe-->
     </template>
     <!--Player, visibility toggle on when device connected-->
     <template id="logged-in-template">
-      <img id="albumCover" />
-      <div class="btn-group" role="group" id="controls">
-        <button type="button" class="btn btn-primary" id="previousTrack">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M21 16.811c0 .864-.933 1.406-1.683.977l-7.108-4.061a1.125 1.125 0 0 1 0-1.954l7.108-4.061A1.125 1.125 0 0 1 21 8.689v8.122ZM11.25 16.811c0 .864-.933 1.406-1.683.977l-7.108-4.061a1.125 1.125 0 0 1 0-1.954l7.108-4.061a1.125 1.125 0 0 1 1.683.977v8.122Z"
-            />
-          </svg>
-        </button>
-        <button type="button" class="btn btn-primary" id="togglePlay">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M21 7.5V18M15 7.5V18M3 16.811V8.69c0-.864.933-1.406 1.683-.977l7.108 4.061a1.125 1.125 0 0 1 0 1.954l-7.108 4.061A1.125 1.125 0 0 1 3 16.811Z"
-            />
-          </svg>
-        </button>
-        <button type="button" class="btn btn-primary" id="nextTrack">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M3 8.689c0-.864.933-1.406 1.683-.977l7.108 4.061a1.125 1.125 0 0 1 0 1.954l-7.108 4.061A1.125 1.125 0 0 1 3 16.811V8.69ZM12.75 8.689c0-.864.933-1.406 1.683-.977l7.108 4.061a1.125 1.125 0 0 1 0 1.954l-7.108 4.061a1.125 1.125 0 0 1-1.683-.977V8.69Z"
-            />
-          </svg>
-        </button>
+      <div id="tutorial">
+        <h2>Connect to "Remotify" via Spotify Connect to start playing!</h2>
+        <h3>How to:</h3>
+        <ol>
+          <li>Open Spotify on your phone or on the desktop app.</li>
+          <li>Press on the "Devices" icon.</li>
+          <li>Select the "Remotify" option.</li>
+          <li>Enjoy your music!</li>
+        </ol>
       </div>
-      <div class="progressContainer">
-        <input
-          type="range"
-          min="0"
-          max="100"
-          value="0"
-          class="slider"
-          id="progressslider"
-        />
-      </div>
-
-      <h2 id="currentlyPlaying"></h2>
-      <h3 id="artists"></h3>
-
-      <div class="volumeContainer">
-        <p>Volume:</p>
-        <input
-          type="range"
-          min="0"
-          max="100"
-          value="50"
-          class="slider"
-          id="volumeslider"
-        />
+      <div id="player">
+        <img id="albumCover" />
+        <h2 id="currentlyPlaying"></h2>
+        <h3 id="artists"></h3>
+        <div class="progressContainer">
+          <input
+            type="range"
+            min="0"
+            max="100"
+            value="0"
+            class="slider"
+            id="progressslider"
+          />
+        </div>
+        <div class="btn-group" role="group" id="controls">
+          <button type="button" class="btn btn-primary" id="previousTrack">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M21 16.811c0 .864-.933 1.406-1.683.977l-7.108-4.061a1.125 1.125 0 0 1 0-1.954l7.108-4.061A1.125 1.125 0 0 1 21 8.689v8.122ZM11.25 16.811c0 .864-.933 1.406-1.683.977l-7.108-4.061a1.125 1.125 0 0 1 0-1.954l7.108-4.061a1.125 1.125 0 0 1 1.683.977v8.122Z"
+              />
+            </svg>
+          </button>
+          <button type="button" class="btn btn-primary" id="togglePlay">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M21 7.5V18M15 7.5V18M3 16.811V8.69c0-.864.933-1.406 1.683-.977l7.108 4.061a1.125 1.125 0 0 1 0 1.954l-7.108 4.061A1.125 1.125 0 0 1 3 16.811Z"
+              />
+            </svg>
+          </button>
+          <button type="button" class="btn btn-primary" id="nextTrack">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M3 8.689c0-.864.933-1.406 1.683-.977l7.108 4.061a1.125 1.125 0 0 1 0 1.954l-7.108 4.061A1.125 1.125 0 0 1 3 16.811V8.69ZM12.75 8.689c0-.864.933-1.406 1.683-.977l7.108 4.061a1.125 1.125 0 0 1 0 1.954l-7.108 4.061a1.125 1.125 0 0 1-1.683-.977V8.69Z"
+              />
+            </svg>
+          </button>
+        </div
+        
+        <div class="volumeContainer">
+          <p>Volume:</p>
+          <input
+            type="range"
+            min="0"
+            max="100"
+            value="50"
+            class="slider"
+            id="volumeslider"
+          />
+        </div>
       </div>
       <div>
         <button id="refresh-token-button">Refresh Token</button>
         <button id="logout-button">Log out</button>
       </div>
     </template>
+
+    <script src="../scripts/spotify-player.js"></script>
     <script src="../scripts/connectionHandler.js" type="module" defer></script>
-    <script src="../scripts/playerHandler.js" defer></script>
   </body>
 </html>

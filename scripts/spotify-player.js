@@ -1,4 +1,4 @@
-/* Spotify JS-SDK - v1.10.0-7bf9e3d */
+/* Spotify JS-SDK - v1.10.0-3ce253a */
 
 !function e(t,n,r){function s(a,i){if(!n[a]){if(!t[a]){var u="function"==typeof require&&require;if(!i&&u)return u(a,!0);if(o)return o(a,!0);var c=new Error("Cannot find module '"+a+"'");throw c.code="MODULE_NOT_FOUND",c}var f=n[a]={exports:{}};t[a][0].call(f.exports,(function(e){return s(t[a][1][e]||e)}),f,f.exports,e,t,n,r)}return n[a].exports}for(var o="function"==typeof require&&require,a=0;a<r.length;a++)s(r[a]);return s}({1:[function(e,t,n){"use strict";Object.defineProperty(n,"__esModule",{value:!0}),n.createPromiseResolver=function(){var e,t;return{promise:new Promise((function(n,r){e=n,t=r})),resolve:e,reject:t}}},{}],2:[function(e,t,n){(function(e){(function(){
     /*! *****************************************************************************

@@ -1,13 +1,139 @@
 //This scripts takes care of the login/logout functions + template rendering.
 //This code is heavily modeled after the code in https://github.com/spotify/web-api-examples/tree/master/authorization/authorization_code_pkce
-
+console.log("connection file loaded.");
 // Constants for Spotify API authentication
 const clientId = "60f8dab9ab5f46ab993a5378bea82f26"; // your clientId
 const redirectUrl =
   "chrome-extension://hndbihmidcdkhcpbjodeagbolmbbmolj/popup/remotify.html"; // your redirect URL - must be localhost URL and/or HTTPS
 const authorizationEndpoint = "https://accounts.spotify.com/authorize";
 const tokenEndpoint = "https://accounts.spotify.com/api/token";
-const scope = "user-read-private user-read-email";
+const scope =
+  "user-read-private user-read-email user-read-playback-state user-modify-playback-state user-read-currently-playing app-remote-control streaming";
+
+window.onSpotifyWebPlaybackSDKReady = () => {
+  if (localStorage.getItem("access_token") != null) {
+    console.log("sdk triggered.");
+    const token = localStorage.getItem("access_token");
+    const player = new Spotify.Player({
+      name: "Remotify Player",
+      getOAuthToken: (cb) => {
+        cb(token);
+      },
+      volume: 0.5,
+    });
+    if (player) {
+      console.log("player created.");
+    }
+
+    //Status logging
+    // Ready
+    player.addListener("ready", ({ device_id }) => {
+      console.log("Ready with Device ID", device_id);
+    });
+
+    // Not Ready
+    player.addListener("not_ready", ({ device_id }) => {
+      console.log("Device ID has gone offline", device_id);
+    });
+
+    // Error logging listeners
+
+    player.addListener("initialization_error", ({ message }) => {
+      console.error(message);
+    });
+
+    player.addListener("authentication_error", ({ message }) => {
+      console.error(message);
+    });
+
+    player.addListener("account_error", ({ message }) => {
+      console.error(message);
+    });
+
+    let progressUpdating = false;
+    let listenersOn = false;
+    // Connection state listeners
+
+    player.addListener(
+      "player_state_changed",
+      ({ track_window: { current_track } }) => {
+        let returnedplaying = `${current_track.name}`;
+        let returnedartists = `${(() => {
+          let artistsarray = [];
+          for (const artist of current_track.artists) {
+            artistsarray.push(artist.name);
+          }
+          return artistsarray.join(", ");
+        })()}`;
+        let returnedcover = current_track.album.images[0].url;
+        document.getElementById("currentlyPlaying").innerHTML = returnedplaying;
+        document.getElementById("artists").innerHTML = returnedartists;
+        document.getElementById("albumCover").src = returnedcover;
+        //sets the corresponding length in the progress slider.
+        document.getElementById("progressslider").max =
+          current_track.duration_ms;
+
+        //checks if the buttons already have listeners, else applies listeners to them.
+        if (listenersOn == false) {
+          const togglePlay = document.getElementById("togglePlay");
+          if (togglePlay) {
+            togglePlay.onclick = function () {
+              player.togglePlay();
+            };
+            listenersOn = true;
+          } else {
+            console.log("err1");
+          }
+          const previousTrack = document.getElementById("previousTrack");
+          if (previousTrack) {
+            previousTrack.onclick = function () {
+              player.previousTrack();
+            };
+            listenersOn = true;
+          } else {
+            console.log("err2");
+          }
+          const nextTrack = document.getElementById("nextTrack");
+          if (nextTrack) {
+            nextTrack.onclick = function () {
+              player.nextTrack();
+            };
+            listenersOn = true;
+          } else {
+            console.log("err3");
+          }
+          //slider listeners
+          let volume = document.getElementById("volumeslider");
+          let progress = document.getElementById("progressslider");
+          volume.oninput = function () {
+            player.setVolume(volume.value / 100);
+          };
+          progress.oninput = function () {
+            player.seek(progress.value);
+          };
+          //starts updating the bar progress.
+          if (progressUpdating == false) {
+            progressUpdating = true;
+            setInterval(function () {
+              player.getCurrentState().then((state) => {
+                if (!state) {
+                  console.error("Something broke.");
+                  return;
+                }
+                progress.value = state.position;
+                return;
+              });
+            }, 500);
+          }
+        }
+      }
+    );
+
+    // connects the player
+    player.connect();
+    console.log("connected");
+  }
+};
 
 // Data structure that manages the current active token, caching it in localStorage
 const currentToken = {
@@ -38,7 +164,6 @@ const currentToken = {
 };
 
 // On page load, try to fetch auth code from current browser search URL
-//TODO: FIX
 const args = new URLSearchParams(window.location.search);
 let code = args.get("code");
 
@@ -49,7 +174,6 @@ if (code) {
       currentToken.save(token);
 
       // Remove code from URL so we can refresh correctly.
-      //TODO: FIX
       const url = new URL(window.location.href);
       url.searchParams.delete("code");
 
@@ -66,7 +190,6 @@ if (currentToken.access_token) {
   getUserData()
     .then((userData) => {
       renderTemplate("main", "logged-in-template", userData);
-      renderTemplate("oauth", "oauth-template", currentToken);
     })
     .catch((error) => console.error("Error fetching user data:", error));
 }
@@ -174,17 +297,14 @@ async function loginWithSpotifyClick() {
 
 // Logs out the user by clearing localStorage and redirecting to the redirect URL
 async function logoutClick() {
-  console.log("deleting stuff");
   localStorage.clear();
   window.location.href = redirectUrl;
 }
 
 // Refreshes access token and updates UI
 async function refreshTokenClick() {
-  console.log("refreshing token");
   const token = await refreshToken();
   currentToken.save(token);
-  renderTemplate("oauth", "oauth-template", currentToken);
 }
 
 // Render HTML templates
@@ -233,13 +353,13 @@ function renderTemplate(targetId, templateId, data = null) {
   const target = document.getElementById(targetId);
   target.innerHTML = "";
   target.appendChild(clone);
-
   // Add event listeners to the newly rendered elements
   addPageListeners();
 }
 
 // Add listeners to the page p
 function addPageListeners() {
+  console.log("addlisteners executed");
   const loginButton = document.getElementById("login-button");
   if (loginButton) {
     loginButton.addEventListener("click", loginWithSpotifyClick);
@@ -251,6 +371,26 @@ function addPageListeners() {
   const logoutButton = document.getElementById("logout-button");
   if (logoutButton) {
     logoutButton.addEventListener("click", logoutClick);
-    console.log("binded to 3");
   }
+  console.log("normal buttons executed");
+}
+
+//Checks for the existance of listeners.
+function hasEventListener(element, eventType) {
+  if (!element || !eventType) {
+    console.log("evaluates to false");
+    return false;
+  }
+
+  // Check if the element has any event listeners attached
+  if (typeof element[eventType] === "function") {
+    console.log("evaluates to true]");
+    return true; // There is a listener directly attached to the event type
+  }
+
+  // Check if there are any event listeners added through addEventListener
+  const eventListeners = element.__events || {};
+  console.log("evaluates to:");
+  console.log(!!eventListeners[eventType]);
+  return !!eventListeners[eventType];
 }
