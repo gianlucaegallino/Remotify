@@ -4,7 +4,7 @@ A lightweight Spotify session, inside the comfort of a Chrome extension.
 
 ### ⚠️ IMPORTANT: Spotify Premium is required for this extension to work correctly.
 
-### Video Demo: insertUrlHere
+### Video Demo: https://youtu.be/Av5MMWjb-_M
 
 ## About the project:
 
