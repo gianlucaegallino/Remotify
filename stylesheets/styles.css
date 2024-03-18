@@ -1,6 +1,16 @@
-
 body {
   padding: 1rem;
+  color: whitesmoke;
+  background-color: #121212;
+  font-family: "Hanken Grotesk", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  width: 320px;
+  height: 600px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 button svg {
@@ -8,18 +18,124 @@ button svg {
   height: 1rem;
 }
 
-#player {
-  display:none;
+button {
+  background-color: #1ed760;
+  text-decoration: none;
+  border: none;
+  border-radius: 6.25rem;
+  padding: 0.5rem;
+  cursor: pointer;
+  transition: all 0.07s ease;
+  font-size: 0.8rem;
 }
 
-#player.visible{
-  display:block;
+.trans {
+  background-color: #11be4e;
+  text-decoration: none;
+  border: none;
+  border-radius: 6.25rem;
+  padding: 0.5rem;
+  cursor: pointer;
+  transition: all 0.07s ease;
+  font-size: 0.75rem;
+}
+
+#currentlyPlaying {
+  font-size: 1.2rem;
+  margin: 0px;
+}
+
+#artists {
+  color: #b3b3b3;
+  font-size: 1.1rem;
+  margin: 0px;
+}
+
+#player {
+  display: none;
+}
+
+#player.visible {
+  display: flex;
+  background-color: #212121;
+  border-radius: 0.5rem;
+  flex-direction: column;
+  padding: 1rem;
+  align-items: center;
+  align-content: center;
+  align-self: center;
 }
 
 #tutorial {
-  display:none;
+  display: none;
 }
 
-#tutorial.visible{
-  display:block;
+#tutorial.visible {
+  display: block;
+}
+
+#albumCover {
+  border-radius: 0.5rem;
+}
+
+#title {
+  display: flex;
+  flex-direction: row;
+  align-content: flex-start;
+  gap: 0.5rem;
+}
+
+#mainTitle {
+  font-weight: 700;
+  font-size: 2rem;
+}
+
+#mainLogo {
+  width: 2rem;
+  height: 2rem;
+}
+
+#albumCover {
+  width: 250px;
+  height: 250px;
+}
+
+#progressslider {
+  width: 250px;
+}
+
+#controls {
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  width: 250px;
+}
+
+#songinfo {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-self: flex-start;
+  flex-grow: 2;
+  gap: 0px;
+}
+
+#volumesliderTag {
+  margin: 0px;
+  padding-top: 1rem;
+}
+
+#adminbuttons {
+  margin: 0px;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+#volumeContainer {
+  display: flex;
+  flex-direction: column;
+  align-self: flex-start;
+  flex-grow: 2;
+  gap: 0px;
 }

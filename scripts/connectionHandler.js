@@ -1,5 +1,6 @@
-//This scripts takes care of the login/logout functions + template rendering.
-//This code is heavily modeled after the code in https://github.com/spotify/web-api-examples/tree/master/authorization/authorization_code_pkce
+//This scripts takes care of the login/logout functions + template rendering + player handler.
+//The login/session code is heavily modeled after the code in https://github.com/spotify/web-api-examples/tree/master/authorization/authorization_code_pkce
+
 // Constants for Spotify API authentication
 const clientId = "60f8dab9ab5f46ab993a5378bea82f26"; // your clientId
 const redirectUrl =
@@ -13,7 +14,7 @@ window.onSpotifyWebPlaybackSDKReady = () => {
   if (localStorage.getItem("access_token") != null) {
     const token = localStorage.getItem("access_token");
     const player = new Spotify.Player({
-      name: "Remotify Player",
+      name: "Remotify",
       getOAuthToken: (cb) => {
         cb(token);
       },
@@ -55,6 +56,7 @@ window.onSpotifyWebPlaybackSDKReady = () => {
     player.addListener(
       "player_state_changed",
       ({ track_window: { current_track } }) => {
+        console.log(current_track);
         let returnedplaying = `${current_track.name}`;
         let returnedartists = `${(() => {
           let artistsarray = [];
@@ -69,11 +71,11 @@ window.onSpotifyWebPlaybackSDKReady = () => {
         document.getElementById("albumCover").src = returnedcover;
 
         //checks if the tutorial screen is still present. if it is, switches visibility from the tutorial to the player
-        let playerElement = document.getElementById("player")
-        let tutorialElement = document.getElementById("tutorial")
-        if (tutorialElement.classList.contains('visible')){
-          tutorialElement.classList.toggle('visible');
-          playerElement.classList.toggle('visible');
+        let playerElement = document.getElementById("player");
+        let tutorialElement = document.getElementById("tutorial");
+        if (tutorialElement.classList.contains("visible")) {
+          tutorialElement.classList.toggle("visible");
+          playerElement.classList.toggle("visible");
         }
         //sets the corresponding length in the progress slider.
 
@@ -363,25 +365,54 @@ function renderTemplate(targetId, templateId, data = null) {
   addPageListeners();
 }
 
-// Add listeners to the page p
+// Add listeners to the page
 function addPageListeners() {
   console.log("addlisteners executed");
   const loginButton = document.getElementById("login-button");
   if (loginButton) {
     loginButton.addEventListener("click", loginWithSpotifyClick);
+    //Adds GUI listeners
+    loginButton.addEventListener("mousedown", () => {
+      loginButton.classList.add("trans");
+    });
+    loginButton.addEventListener("mouseup", () => {
+      loginButton.classList.remove("trans");
+    });
+    loginButton.addEventListener("mouseleave", () => {
+      loginButton.classList.remove("trans");
+    });
   }
   const refreshButton = document.getElementById("refresh-token-button");
   if (refreshButton) {
     refreshButton.addEventListener("click", refreshTokenClick);
+    //Adds GUI listeners
+    refreshButton.addEventListener("mousedown", () => {
+      refreshButton.classList.add("trans");
+    });
+    refreshButton.addEventListener("mouseup", () => {
+      refreshButton.classList.remove("trans");
+    });
+    refreshButton.addEventListener("mouseleave", () => {
+      refreshButton.classList.remove("trans");
+    });
   }
   const logoutButton = document.getElementById("logout-button");
   if (logoutButton) {
     logoutButton.addEventListener("click", logoutClick);
   }
-  console.log("normal buttons executed");
+  //Adds GUI listeners
+  logoutButton.addEventListener("mousedown", () => {
+    logoutButton.classList.add("trans");
+  });
+  logoutButton.addEventListener("mouseup", () => {
+    logoutButton.classList.remove("trans");
+  });
+  logoutButton.addEventListener("mouseleave", () => {
+    logoutButton.classList.remove("trans");
+  });
 }
 
-//Checks for the existance of listeners.
+//Checks for the existence of listeners.
 function hasEventListener(element, eventType) {
   if (!element || !eventType) {
     console.log("evaluates to false");

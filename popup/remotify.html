@@ -2,6 +2,10 @@
 <html>
   <head>
     <meta charset="utf-8" />
+    <!-- Fonts -->
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital@0;1&display=swap");
+    </style>
     <!--Bootstrap-->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
@@ -14,7 +18,10 @@
   </head>
 
   <body>
-    <h1 class="h1" id="mainTitle">Remotify</h1>
+    <div id="title">
+      <img id="mainLogo" src="../images/Hires.png" />
+      <h1 class="h1" id="mainTitle">Remotify</h1>
+    </div>
     <!--Connection tutorial-->
     <div id="main"></div>
     <div id="oauth"></div>
@@ -22,24 +29,25 @@
       <h2>Welcome to Remotify!</h2>
       <h3>Please log in with your spotify account:</h3>
       <button id="login-button">Log in with Spotify</button>
-      <!--Add a gif here, maybe-->
     </template>
     <!--Player, visibility toggle on when device connected-->
     <template id="logged-in-template">
-      <div id="tutorial" class= 'visible'>
+      <div id="tutorial" class="visible">
         <h2>Connect to "Remotify" via Spotify Connect to start playing!</h2>
         <h3>How to:</h3>
         <ol>
-          <li>Open Spotify on your phone or on the desktop app.</li>
+          <li>Open Spotify on your phone.</li>
           <li>Press on the "Devices" icon.</li>
-          <li>Select the "Remotify" option.</li>
+          <li>Select "Remotify".</li>
           <li>Enjoy your music!</li>
         </ol>
       </div>
       <div id="player">
         <img id="albumCover" />
-        <h2 id="currentlyPlaying"></h2>
-        <h3 id="artists"></h3>
+        <div id="songinfo">
+          <h2 id="currentlyPlaying"></h2>
+          <h3 id="artists"></h3>
+        </div>
         <div class="progressContainer">
           <input
             type="range"
@@ -98,8 +106,8 @@
           </button>
         </div>
 
-        <div class="volumeContainer">
-          <p>Volume:</p>
+        <div id="volumeContainer">
+          <p id="volumesliderTag">Volume:</p>
           <input
             type="range"
             min="0"
@@ -110,7 +118,7 @@
           />
         </div>
       </div>
-      <div>
+      <div id="adminbuttons">
         <button id="refresh-token-button">Refresh Token</button>
         <button id="logout-button">Log out</button>
       </div>
