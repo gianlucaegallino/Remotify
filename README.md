@@ -124,3 +124,6 @@ I plan on adding the following features in future versions:
 - Add Playlist Selection support.
 - Add Shuffle toggle
 - Make it all work in the background, when the popup is closed.
+- TypeScript Port
+- Publish on the Chrome Web Store!
+
